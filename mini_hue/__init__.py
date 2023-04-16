@@ -15,7 +15,7 @@ class System(object):
     def refresh(self):
 
         r = self.get("resource/device")
-        
+ 
         for item in r["data"]:
             if item["type"] == "device":
                 self.devices.append(Device(self, item))
@@ -29,26 +29,16 @@ class System(object):
     def get(self, api):
 
         url = "https://%s/clip/v2/%s" % (self.bridge, api)
-        # print(url)
 
         response = requests.get(url, verify = False, headers = {"hue-application-key": self.key})
-        # response = requests.get(url, cert="huebridge_cacert.pem", headers = {"hue-application-key": self.key})
-        # print(response.status_code)
-        # print(response.reason)
-        # print(response.text)
 
         return json.loads(response.text)
 
     def put(self, api, data):
 
         url = "https://%s/clip/v2/%s" % (self.bridge, api)
-        # print(url)
 
         response = requests.put(url, verify = False, headers = {"hue-application-key": self.key}, data = json.dumps(data))
-        # response = requests.put(url, cert="huebridge_cacert.pem", headers = {"hue-application-key": self.key}, data = json.dumps(data))
-        # print(response.status_code)
-        # print(response.reason)
-        # print(response.text)
 
         return json.loads(response.text)
 
@@ -110,6 +100,10 @@ class Light(Hue):
     def off(self):
 
         self.system.put("resource/light/%s" % self.id, {"on" : {"on": False}})
+
+    def put(self, data):
+
+        self.system.put("resource/light/%s" % self.id, data)
 
 
 class Service(object):
